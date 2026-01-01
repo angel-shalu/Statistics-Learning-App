@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 
@@ -63,7 +64,10 @@ if box_type1 == "Measure of Dispersion (Variability)":
         "Standard Deviation", "Variance",
         "Coefficient of Variation", "Interquartile Rnage (IQR)"
     ]
-
+    
+elif box_type1 == "Measure of Central Tendency":
+    level3_options = ["Mean", "Median","Mode"]
+    
 elif box_type1 == " Measure Of shape":
     level3_options = ["Skewness","Kurtosis"]
 
@@ -178,7 +182,7 @@ if box_type1.startswith("Measures"):
             n = len(data)
             data_stored = sorted(data)
             mean = sum(data) / n
-            st.markdown("### Formula & Calcukation")
+            st.markdown("### Formula & Calculation")
 
             # ----------CENTRAL TENDENCY -------
             if box_type2 =="Mean":
@@ -285,7 +289,7 @@ if data is not None and len(data) > 1:
     
     # Histogram + KDE
     fig1, ax1 = plt.subplots()
-    sns.hisplot(
+    sns.histplot(
         df_plot["Values"],
         bins=10,
         kde=True,
