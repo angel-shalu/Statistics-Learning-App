@@ -5,26 +5,32 @@ import seaborn as sns
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="📊 Statistics Learning App", layout="wide")
+st.set_page_config(page_title="Statistics Learning App", layout="wide")
 
 # ---------- Header ----------
-st.markdown("<h1 style='text-align:center;color:#4B8BFF;'>📊 Statistics Learning App</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align:center;'>Learn statistics through interaction & visualization</p>", unsafe_allow_html=True)
-st.divider()
-
 st.markdown("""
 <style>
-.gradient-tect{
-    text-align: centre;
+.gradient-text {
+    text-align: center;
     font-size: 48px;
-    font-weight; bold;
+    font-weight: bold;
     background: linear-gradient(90deg, #ff4b1f, #1fddff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}   
+.subtitle {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 8px;
 }
-<style>
-<div class="gradient-text"> MATHEMATICS STATICS APP</div>
+</style> 
+
+<div class="gradient-text">MATHEMATICS STATICS APP</div>
+<div class="subtitle">Learn statistics through interaction & visualization</div>
 """, unsafe_allow_html=True)
+st.divider()
+
 
 st.markdown(
     "<h1 style='text-align: centre; color:#ff5733;'>STATISTICS</h1>",
@@ -38,10 +44,10 @@ box_type = st.sidebar.selectbox(
 
 if box_type == "Descriptive Statistics":
     level2_options = [
-        "Measures of Centarl Tendency",
+        "Measure of Central Tendency",
         "Measure of Dispersion (Variability)",
         "Measure of Shape",
-        "Measures of Position (Relative Standing)"     
+        "Measure of Position (Relative Standing)"     
     ]
 else:
     level2_options = [
@@ -54,28 +60,27 @@ else:
     ]
 
 box_type1 = st.sidebar.selectbox(
-    f"Typeof {box_type},",
+    f"Type of {box_type}",
     level2_options       
 )
-
-if box_type1 == "Measure of Dispersion (Variability)":
+if box_type1 == "Measure of Central Tendency":
+    level3_options = ["Mean", "Median","Mode"]
+    
+elif box_type1 == "Measure of Dispersion (Variability)":
     level3_options = [
         "Range", "Mean Absolute Deviation (MAD)",
         "Standard Deviation", "Variance",
         "Coefficient of Variation", "Interquartile Rnage (IQR)"
     ]
     
-elif box_type1 == "Measure of Central Tendency":
-    level3_options = ["Mean", "Median","Mode"]
-    
-elif box_type1 == " Measure Of shape":
+elif box_type1 == "Measure of Shape":
     level3_options = ["Skewness","Kurtosis"]
 
 elif box_type1 == "Measure of Position (Relative Standing)":
     level3_options = ["Quartiles", "Deciles", "Percentiles", "Z-Score"]
 
 elif box_type1 == "Hypothesis Testing":
-    level3_options = ["Type 1 Error", "Type 2 Error"]
+    level3_options = ["Type I Error", "Type II Error"]
 
 elif box_type1 == "Z-Test" or box_type1 == "T-Test":
     level3_options = ["Population", "Sample"]
@@ -87,7 +92,7 @@ else:
     level3_options = ["Method 1", "Method 2"]
 
 box_type2 = st.sidebar.selectbox(
-    f"Select Method {box_type1}",
+    f"Select Method from {box_type1}",
     level3_options
 )
 
@@ -97,12 +102,12 @@ st.markdown(
 )
 
 st.markdown(
-    f"<h2 style='color:#ff5733;'>{box_type}</h2>",
+    f"<h2 style='color:#ff5733;'>{box_type1}</h2>",
     unsafe_allow_html=True
 )
 
 st.markdown(
-    f"<h3 style='color:#2ecc71;'>{box_type}</h3>",
+    f"<h3 style='color:#2ecc71;'>{box_type2}</h3>",
     unsafe_allow_html=True
 )
 
@@ -111,6 +116,7 @@ st.markdown(
 # =======================
 
 st.markdown("## Data Input Method")
+
 if "data_input_value" not in st.session_state:
     st.session_state.data_input_values = ""
 
@@ -144,7 +150,7 @@ if data_source == "Upload CSV / Excel":
             numeric_cols = df.select_dtype(include="number").columns.tolist()
 
             if not numeric_cols:
-                st.error("No numeric column found in file")
+                st.error("No numeric column found in file.")
             else:
                 selected_col = st.selectbox(
                     "Select Numeric Colun for Analysis",
@@ -160,7 +166,9 @@ if data_source == "Upload CSV / Excel":
         except Exception as e:
             st.error(f"Error reading file:{e}")
 
-if box_type1.startswith("Measures"):
+
+
+if box_type1.startswith("Measure"):
 
     if data_source == "Manual Entry":
         st.markdown("### Entry Data (comma-separated)")
@@ -199,10 +207,10 @@ if box_type1.startswith("Measures"):
 
             elif box_type2 == "Mode":
                 from collections import Counter
-                st.latex(r"\text{Mode} = \text{Mode frequent value}")
+                st.latex(r"\text{Mode} = \text{Most frequent value}")
                 freq = Counter(data)
                 max_freq = max(freq.values())
-                mode = [k for k, v in freq.items() if v == max_]
+                mode = [k for k, v in freq.items() if v == max_freq]
                 st.success(f"Mode = {mode}")
 
             # ------------DISPERSION-----------
@@ -227,36 +235,35 @@ if box_type1.startswith("Measures"):
 
             elif box_type2 == "Interquartile Range (IQR)":
                 st.latex(r"\text{IQR} = Q_3 - Q_1")
-                q1 = np.percentile(data, 25)
-                q3 = np.percentile(data, 75)
-                iqr = q3 - q1
-                st.success(f"IQR = {iqr}")
+                q1 = data_stored[n//4]
+                q3 = data_stored[(3*n)//4]
+                st.success(f"IQR = {q3 -  q1}")
 
             elif box_type2 == "Coefficient of Variation (CV)":
                 st.latex(r"\text{CV} = \frac{\sigma}{\bar{x}} \times 100")
                 std_dev = (sum((x - mean) ** 2 for x in data) / n) ** 0.5
                 cv = (std_dev / mean) * 100
-                st.success(f"Coefficient of Variation = {cv}%")
+                st.success(f"Coefficient of Variation = {cv:.2f}%")
 
             # -----------SHAPE-----
             elif box_type2 == "Skewness":
-                st.latex(r"\text{Skewness} = \frac{\frac{1}{n}\sum (x - \bar{x})^3}{\left(\frac{1}{n}\sum (x - \bar{x})^2\right)^{3/2}}")
-                skew = sum((x - mean) ** 3 for x in data) / n
-                skew = skew / ((sum((x - mean) ** 2 for x in data) / n) ** 1.5)
+                st.latex(r"\text{Skewness} = \frac{\sum (x - \bar{x})^3}{n\sigma^3}")
+                std_dev = (sum((x - mean) ** 3 for x in data) / n) ** 0.5
+                skew = sum((x - mean) ** 2 for x in data) / (n * std_dev ** 3)
                 st.success(f"Skewness = {skew}")
 
             elif box_type2 == "Kurtosis":
-                st.latex(r"\text{Kurtosis} = \frac{\frac{1}{n}\sum (x - \bar{x})^4}{\left(\frac{1}{n}\sum (x - \bar{x})^2\right)^2}")
-                kurt = sum((x - mean) ** 4 for x in data) / n
-                kurt = kurt / ((sum((x - mean) ** 2 for x in data) / n) ** 2)
+                st.latex(r"\text{Kurtosis} = \frac{\sum(x - \bar{x})^3}{n\sigma^3}")
+                std_dev = (sum((x - mean) ** 2 for x in data) / n) ** 0.5
+                kurt = sum((x - mean) ** 4 for x in data) / (n * std_dev ** 4)
                 st.success(f"Kurtosis = {kurt}")
 
             # ------------POSITION-----------
             elif box_type2 == "Quartiles":
-                st.latex(r"Q_k = \text{Value at } \frac{k(n+1)}{4}\text{th position}")
-                q1 = np.percentile(data, 25)
-                q2 = np.percentile(data, 50)
-                q3 = np.percentile(data, 75)
+                st.latex(r"Q_1, Q_2, Q_3")
+                q1 = data_sorted[n//4]
+                q2 = data_sorted[n//2]
+                q3 = data_sorted[3*n//4]
                 st.success(f"Q1 = {q1}, Q2 = {q2}, Q3 = {q3}")
 
             elif box_type2 == "Deciles":
