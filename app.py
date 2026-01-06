@@ -4,6 +4,7 @@ import pandas as pd
 import seaborn as sns
 import scipy.stats as stats
 import matplotlib.pyplot as plt
+import math
 
 st.set_page_config(page_title="Statistics Learning App", layout="wide")
 
@@ -408,7 +409,7 @@ if box_type == "Inferential Statistics":
                     st.success(f"Z-Statisics (Sample) = {z}")
                     
                     x_vals = [i / 10 for i in range(-50, 51)]
-                    y_vals = [math.exp(-0.5 * x*x0) / math.sqrt(2*math.pi) for x in x_vals]
+                    y_vals = [math.exp(-0.5 * x*x) / math.sqrt(2*math.pi) for x in x_vals]
                     
                     fig, ax = plt.subplots()
                     ax.plot(x_vals, y_vals)
