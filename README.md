@@ -66,3 +66,8 @@ This app helps you see what the formulas actually do.
 # 👩‍💻 Author
 
 Shalini Kumari
+
+
+# Live Demo
+https://statistics-learning-app-z7ysjchmzu4r6kufze9vjp.streamlit.app/
+
